@@ -11,4 +11,9 @@ Copy the files from this plugin into the corresponding folders on your installat
 
 # Configuration
 
-Change configuration settings in admin panel.
+Provide the values for the following in the *Configuration Settings* of the Admin Panel.
+ 1. Merchant ID
+ 2. Website
+ 3. Merchant Key
+ 4. Channel ID
+ 5. Industry Type ID
