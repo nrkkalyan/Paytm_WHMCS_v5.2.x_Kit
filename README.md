@@ -1,16 +1,13 @@
-# Paytm-Integration-Kit-WHMCS
+# Introduction
 
-Paytm-Integration-Kit-WHMCS is used in WHMCS PHP E-Commerce Application 
-
-This library provides support for payment gateway Paytm by Paytm.
+This integration kit is used in WHMCS PHP E-Commerce Application. This library provides support for Paytm payment gateway.
 
 # Installation
 
-Copy and paste the files in the corresponding folders as mentioned in the integration kit.
-
-  /module/gateways/paytm.php
-	/module/gateways/callback/paytm.php
-	/module/gateways/paytm-sdk/
+Copy the files from this plugin into the corresponding folders on your installation, as mentioned below:
+1. Copy the Paytm/gateways/paytm.php file into your installation's /module/gateways/ folder
+2. Copy the Paytm/gateways/callback/paytm.php file into your installation's /module/gateways/callback folder.
+3. Copy the Paytm/gateways/paytm-sdk folder into your /module/gateways folder
 
 # Configuration
 
