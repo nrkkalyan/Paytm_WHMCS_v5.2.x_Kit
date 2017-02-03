@@ -28,11 +28,29 @@ if(isset($response['ORDERID']) && isset($response['STATUS']) && isset($response[
 	checkCbTransID($paytm_trans_id); 
 	
 	$checksum_status = verifychecksum_e($response, html_entity_decode($GATEWAY['merchant_key']), $checksum_recv);
-
+	
+	// Create an array having all required parameters for status query.
+	$requestParamList = array("MID" => $GATEWAY['merchant_id'] , "ORDERID" => $response['ORDERID']);
+			
+	// Call the PG's getTxnStatus() function for verifying the transaction status.
+	$check_status_url = 'https://pguat.paytm.com/oltp/HANDLER_INTERNAL/TXNSTATUS';
+	
+	if($GATEWAY['environment']=="LIVE")
+	{
+		$check_status_url = 'https://secure.paytm.in/oltp/HANDLER_INTERNAL/TXNSTATUS';
+	}
+	
 	if($status== 'TXN_SUCCESS' && $checksum_status == "TRUE"){	
-		$gatewayresult = "success";
-		addInvoicePayment($txnid, $paytm_trans_id, $amount, $gatewaymodule); 
-	  logTransaction($GATEWAY["name"], $response, $response['RESPMSG']); 
+		$responseParamList = callAPI($check_status_url, $requestParamList);
+		if($responseParamList['STATUS']=='TXN_SUCCESS' && $responseParamList['TXNAMOUNT']==$response['TXNAMOUNT'])
+		{
+			$gatewayresult = "success";
+			addInvoicePayment($txnid, $paytm_trans_id, $amount, $gatewaymodule); 
+			logTransaction($GATEWAY["name"], $response, $response['RESPMSG']);
+		}
+		else{
+			logTransaction($GATEWAY["name"], $response, "Suspected Fraud");
+		}
 	} elseif ($status == "TXN_SUCCESS" && $checksum_status != "TRUE") {
 		logTransaction($GATEWAY["name"], $response, "Checksum Mismatch");
 	}else {
