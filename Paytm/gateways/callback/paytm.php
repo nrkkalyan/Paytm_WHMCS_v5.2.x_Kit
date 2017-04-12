@@ -31,17 +31,21 @@ if(isset($response['ORDERID']) && isset($response['STATUS']) && isset($response[
 	
 	// Create an array having all required parameters for status query.
 	$requestParamList = array("MID" => $GATEWAY['merchant_id'] , "ORDERID" => $response['ORDERID']);
-			
+	
+	$StatusCheckSum = getChecksumFromArray($requestParamList, html_entity_decode($GATEWAY['merchant_key']));
+							
+	$requestParamList['CHECKSUMHASH'] = $StatusCheckSum;
+	
 	// Call the PG's getTxnStatus() function for verifying the transaction status.
-	$check_status_url = 'https://pguat.paytm.com/oltp/HANDLER_INTERNAL/TXNSTATUS';
+	$check_status_url = 'https://pguat.paytm.com/oltp/HANDLER_INTERNAL/getTxnStatus';
 	
 	if($GATEWAY['environment']=="LIVE")
 	{
-		$check_status_url = 'https://secure.paytm.in/oltp/HANDLER_INTERNAL/TXNSTATUS';
+		$check_status_url = 'https://secure.paytm.in/oltp/HANDLER_INTERNAL/getTxnStatus';
 	}
 	
 	if($status== 'TXN_SUCCESS' && $checksum_status == "TRUE"){	
-		$responseParamList = callAPI($check_status_url, $requestParamList);
+		$responseParamList = callNewAPI($check_status_url, $requestParamList);
 		if($responseParamList['STATUS']=='TXN_SUCCESS' && $responseParamList['TXNAMOUNT']==$response['TXNAMOUNT'])
 		{
 			$gatewayresult = "success";
