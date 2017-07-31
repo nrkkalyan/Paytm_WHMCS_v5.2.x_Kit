@@ -53,7 +53,7 @@ if(isset($response['ORDERID']) && isset($response['STATUS']) && isset($response[
 			logTransaction($GATEWAY["name"], $response, $response['RESPMSG']);
 		}
 		else{
-			logTransaction($GATEWAY["name"], $response, "Suspected Fraud");
+			logTransaction($GATEWAY["name"], $response, "It seems some issue in server to server communication. Kindly connect with administrator.");
 		}
 	} elseif ($status == "TXN_SUCCESS" && $checksum_status != "TRUE") {
 		logTransaction($GATEWAY["name"], $response, "Checksum Mismatch");
