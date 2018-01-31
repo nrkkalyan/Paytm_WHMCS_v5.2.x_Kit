@@ -1,7 +1,7 @@
 <?php
 
 function encrypt_e($input, $ky) {
-	$key = $ky;
+	$key   = html_entity_decode($ky);
 	$size = mcrypt_get_block_size(MCRYPT_RIJNDAEL_128, 'cbc');
 	$input = pkcs5_pad_e($input, $size);
 	$td = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', 'cbc', '');
@@ -17,7 +17,7 @@ function encrypt_e($input, $ky) {
 function decrypt_e($crypt, $ky) {
 
 	$crypt = base64_decode($crypt);
-	$key = $ky;
+	$key   = html_entity_decode($ky);
 	$td = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', 'cbc', '');
 	$iv = "@@@@&&&&####$$$$";
 	mcrypt_generic_init($td, $key, $iv);
