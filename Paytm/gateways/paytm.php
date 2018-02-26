@@ -4,12 +4,14 @@ require_once(dirname(__FILE__) . '/paytm-sdk/encdec_paytm.php');
 
 function paytm_config(){
     $configarray = array(
-     "FriendlyName" => array("Type" => "System", "Value"=>"Paytm"),
-	 "merchant_id" => array("FriendlyName" => "Merchant ID", "Type" => "text", "Size" => "20", ),
-     "merchant_key" => array("FriendlyName" => "Merchant Key", "Type" => "text", "Size" => "16", ),
-     "environment" => array("FriendlyName" => "Environment", "Type" => "dropdown", "Options" =>"TEST,LIVE", "Description" => "TEST or LIVE", ),
-	 "website" => array("FriendlyName" => "Website name", "Type" => "text", "Size" => "20", ),
-	 "industry_type" => array("FriendlyName" => "Industry Name", "Type" => "text", "Size" => "20", ),
+		"FriendlyName" => array("Type" => "System", "Value"=>"Paytm"),
+		"merchant_id" => array("FriendlyName" => "Merchant ID", "Type" => "text", "Size" => "20", ),
+		"merchant_key" => array("FriendlyName" => "Merchant Key", "Type" => "text", "Size" => "16", ),
+		// "environment" => array("FriendlyName" => "Environment", "Type" => "dropdown", "Options" =>"TEST,LIVE", "Description" => "TEST or LIVE", ),
+		"transaction_url" => array("FriendlyName" => "Transaction Url", "Type" => "text", "Size" => "90", ),
+		"transaction_status_url" => array("FriendlyName" => "Transaction Status Url", "Type" => "text", "Size" => "90", ),
+		"website" => array("FriendlyName" => "Website name", "Type" => "text", "Size" => "20", ),
+		"industry_type" => array("FriendlyName" => "Industry Name", "Type" => "text", "Size" => "20", ),
 	);		
 	return $configarray;
 }
@@ -22,7 +24,8 @@ function paytm_link($params) {
 	$website= $params['website'];
 	$industry_type= $params['industry_type'];
 	$channel_id="WEB";	
-	$gateway_mode = $params['environment'];		
+	// $gateway_mode = $params['environment'];		
+	$transaction_url = $params['transaction_url'];		
 	$amount = $params['amount']; 
 	$email = $params['clientdetails']['email'];
 	
@@ -39,10 +42,18 @@ function paytm_link($params) {
 	$checksum = getChecksumFromArray($post_variables, $secret_key);
 	
 	$companyname = 'paytm';
-	$pg_url = "https://pguat.paytm.com/oltp-web/processTransaction";
-	if($gateway_mode == 'LIVE'){
-		$pg_url = "https://secure.paytm.in/oltp-web/processTransaction";
-	}
+	/*	19751/17Jan2018	*/
+		/*$pg_url = "https://pguat.paytm.com/oltp-web/processTransaction";
+		if($gateway_mode == 'LIVE'){
+			$pg_url = "https://secure.paytm.in/oltp-web/processTransaction";
+		}*/
+
+		/*$pg_url = "https://securegw-stage.paytm.in/theia/processTransaction";
+		if($gateway_mode == 'LIVE'){
+			$pg_url = "https://securegw.paytm.in/theia/processTransaction";
+		}*/
+		$pg_url = $transaction_url;
+	/*	19751/17Jan2018 end	*/
 	$code = '
 	<form method="post" action='. $pg_url .'>
 		<input type="hidden" name="MID" value="'.  $merchant_id . '"/>
